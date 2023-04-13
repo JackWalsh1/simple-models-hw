@@ -24,5 +24,13 @@
     "express-handlebars": "^7.0.2",
     "mongoose": "^7.0.2",
     "serve-favicon": "^2.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackWalsh1/simple-models-hw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JackWalsh1/simple-models-hw/issues"
+  },
+  "homepage": "https://github.com/JackWalsh1/simple-models-hw#readme"
 }
