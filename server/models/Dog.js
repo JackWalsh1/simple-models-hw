@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 // variable to hold our Model
 let DogModel = {};
 
-/* 
-   Name should be a string
+/*
+   Name should be a unique string
    Breed should be a string
    Age should be a number (...yep, not touching that one)
    CreatedDate should be date added
@@ -22,7 +22,6 @@ const DogSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true,
   },
 
   age: {
@@ -41,5 +40,5 @@ const DogSchema = new mongoose.Schema({
 // label discriminator
 DogModel = mongoose.model('Dog', DogSchema);
 
-//export dog model
+// export dog model
 module.exports = DogModel;

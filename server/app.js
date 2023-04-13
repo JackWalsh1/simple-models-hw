@@ -29,7 +29,7 @@ const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/simpleMVCExample';
 // If there are any errors connecting, we will throw it and kill the server.
 // Once connected, the mongoose package will stay connected for every file
 // that requires it in this project
-mongoose.connect(dbURI).catch(err => {
+mongoose.connect(dbURI).catch((err) => {
   if (err) {
     console.log('Could not connect to database');
     throw err;

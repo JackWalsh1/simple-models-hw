@@ -2,18 +2,12 @@
 const models = require('../models');
 
 // get the Cat model
-const { Cat, Dog} = models;
+const { Cat, Dog } = models;
 
 // default fake data so that we have something to work with until we make a real Cat
 const catDefaultData = {
   name: 'unknown',
   bedsOwned: 0,
-};
-
-const dogDefaultData = {
-  name: 'unknown',
-  breed: 'unknown',
-  age: 0,
 };
 
 // object for us to keep track of the last Cat we made and dynamically update it sometimes
@@ -34,10 +28,11 @@ const hostIndex = (req, res) => {
 // Function for rendering the page1 template
 // Page1 has a loop that iterates over an array of cats
 const hostPage1 = async (req, res) => {
-  /* database / server aren't neccesarily connected - as such, async & always account for disconnections
+  /* database / server aren't neccesarily connected
+  - as such, async & always account for disconnections
   */
   try {
-    /* 
+    /*
         .find() object as a parameter that defines the search
        .lean() only return the JS Objects being stored
        .exec() executes the chain of operations
@@ -62,6 +57,26 @@ const hostPage3 = (req, res) => {
   res.render('page3');
 };
 
+const hostPage4 = async (req, res) => {
+  /* database / server aren't neccesarily connected
+  - as such, async & always account for disconnections
+  */
+  try {
+    /*
+          .find() object as a parameter that defines the search
+         .lean() only return the JS Objects being stored
+         .exec() executes the chain of operations
+      */
+    const docs = await Dog.find({}).lean().exec();
+
+    // Once we get back the docs array, we can send it to page1.
+    return res.render('page4', { dogs: docs });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'failed to find dogs' });
+  }
+};
+
 // Get name will return the name of the last added cat.
 const getName = (req, res) => res.json({ name: lastAdded.name });
 
@@ -84,7 +99,7 @@ const setName = async (req, res) => {
     bedsOwned: req.body.beds,
   };
 
-  /* 
+  /*
    turn it into something the database
      - create a new instance of a Cat using the Cat model exported from Models
   */
@@ -119,35 +134,21 @@ const setDogName = async (req, res) => {
     return res.status(400).json({ error: 'name, breed, and age are all required' });
   }
 
-  /* we want to create a dog and add it to our database.
-      - creating a dog that matches the format of our Dog schema
-  */
   const dogData = {
     name: `${req.body.name}`,
     breed: `${req.body.breed}`,
     age: req.body.age,
   };
 
-  /* 
-   turn it into something the database
-     - create a new instance of a Cat using the Cat model exported from Models
-  */
   const newDog = new Dog(dogData);
 
   try {
-    /* newCat is a version of our catData that is database-friendly.
-    .save() - intelligently add or update the cat in the database.
-    */
     await newDog.save();
   } catch (err) {
     // log the error and send an error message back to the client.
     console.log(err);
     return res.status(500).json({ error: 'failed to create dog' });
   }
-
-  /* - update our lastAdded cat to the one we just added.
-     - We will then send that cat's data to the client.
-  */
 
   return res.json({
     name: newDog.name,
@@ -158,7 +159,7 @@ const setDogName = async (req, res) => {
 
 // Function to handle searching a cat by name.
 const searchName = async (req, res) => {
-  /* 
+  /*
      If the user does not give us a name to search by, throw an error.
   */
   if (!req.query.name) {
@@ -192,7 +193,7 @@ const searchName = async (req, res) => {
 };
 
 const increaseDogAge = async (req, res) => {
-  /* 
+  /*
      If the user does not give us a name to search by, throw an error.
   */
   if (!req.body.name) {
@@ -275,6 +276,7 @@ module.exports = {
   page1: hostPage1,
   page2: hostPage2,
   page3: hostPage3,
+  page4: hostPage4,
   getName,
   setName,
   setDogName,
